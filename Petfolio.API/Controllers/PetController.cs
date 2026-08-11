@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Petfolio.Application.UseCases.Pets.GetAll;
 using Petfolio.Application.UseCases.Pets.Register;
 using Petfolio.Application.UseCases.Pets.Update;
 using Petfolio.Communication.Requests;
@@ -29,7 +30,18 @@ namespace Petfolio.API.Controllers
             useCase.Execute(id, request);
             return NoContent();
         }
-        
-        
+
+        [HttpGet]
+        [ProducesResponseType(typeof(ResponseAllPetsJson), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult GetAll()
+        {
+            var useCase = new GetAllPetsUseCase().Execute();
+            
+            if (useCase.Pets.Any())
+                return Ok(useCase);
+            
+            return NoContent();
+        }
     }
 }
